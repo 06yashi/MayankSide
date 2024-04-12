@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applicant List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        #app {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Applicant List</h1>
+        <ul id="applicant-list"></ul>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchApplicants();
+        });
+
+        async function fetchApplicants() {
+            try {
+                const response = await fetch('/find/findApplicant');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                const data = await response.json();
+                displayApplicants(data.applicantArray);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        function displayApplicants(applicants) {
+            const applicantList = document.getElementById('applicant-list');
+            applicantList.innerHTML = ''; // Clear previous content
+
+            applicants.forEach(applicant => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${applicant.firstName} ${applicant.lastName} - ${applicant.email}`;
+                applicantList.appendChild(listItem);
+            });
+        }
+    </script>
+</body>
+</html>
